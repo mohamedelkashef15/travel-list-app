@@ -9,3 +9,91 @@
 body {
   font-family: "Quicksand", sans-serif;
 }
+
+ul {
+  list-style: none;
+}
+
+#app {
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  height: 100vh;
+
+  .logo {
+    background-color: #f4a226;
+    width: 100%;
+    text-align: center;
+    padding: 2rem 0;
+    h1 {
+      font-family: "Monoton";
+      font-size: 80px;
+      font-weight: 400;
+    }
+  }
+
+  #form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem 0;
+    background-color: #e5771f;
+    width: 100%;
+    text-align: center;
+    gap: 1rem;
+
+    h3 {
+      font-size: 24px;
+    }
+
+    select,
+    input {
+      padding: 10px 25px;
+      border-radius: 20px;
+      font-size: 20px;
+      border: none;
+      background-color: #ffebb3;
+    }
+
+    button {
+      cursor: pointer;
+      padding: 10px 25px;
+      border-radius: 20px;
+      font-size: 18px;
+      background-color: #76c7ad;
+      color: #5a3e2b;
+      font-weight: 400;
+      border: none;
+    }
+  }
+  .list {
+    background-color: #5a3e2b;
+    padding: 5rem 15rem;
+    font-size: 25px;
+
+    .list-item {
+      input {
+        width: 20px;
+        height: 20px;
+        margin-right: 10px;
+        cursor: pointer;
+      }
+      .text {
+        color: #ffebb3;
+      }
+      .close {
+        font-size: 20px;
+        margin-left: 20px;
+        cursor: pointer;
+      }
+    }
+  }
+
+  footer {
+    padding: 30px;
+    text-align: center;
+    font-size: 24px;
+    background-color: #76c7ad;
+    color: #5a3e2b;
+    font-weight: 600;
+  }
+}
