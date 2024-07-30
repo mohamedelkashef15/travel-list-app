@@ -1,0 +1,21 @@
+- Component Structure
+App 
+  - Logo 
+  - Form 
+  - PackagingList 
+    - Item
+  - Stats
+
+- Logic & functionality 
+  - in case of pack is true cross the Item
+  - on Click to add button 
+    - form will be submitted 
+    - add state of description and quatity 
+    - add new item to packageList 
+    - check if there is no description then return nothing 
+    - set states to it's initial state
+
+font 
+@import url("https://fonts.googleapis.com/css2?family=Monoton&family=Quicksand:wght@500;700&display=swap");
+
+font-family: "Quicksand", sans-serif;
