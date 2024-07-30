@@ -67,8 +67,10 @@ ul {
   }
   .list {
     background-color: #5a3e2b;
-    padding: 5rem 15rem;
-    font-size: 25px;
+    padding: 5rem 8rem;
+    font-size: 20px;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
 
     .list-item {
       input {
@@ -79,11 +81,17 @@ ul {
       }
       .text {
         color: #ffebb3;
+        margin-bottom: 2px;
+        &.selected {
+          text-decoration: line-through;
+        }
       }
       .close {
         font-size: 20px;
         margin-left: 20px;
         cursor: pointer;
+        background-color: transparent;
+        border: none;
       }
     }
   }
