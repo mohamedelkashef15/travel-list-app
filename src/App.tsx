@@ -1,23 +1,35 @@
 import { useState } from "react";
 
 interface IItem {
-  quantity: number;
+  id: number;
   description: string;
+  quantity: number;
   packed: boolean;
+  onDeleteItem?: (val: number) => void;
+  onToggleItem?: (val: number) => void;
 }
 
-const initialItems = [
-  { id: 1, description: "Passports", quantity: 2, packed: false },
-  { id: 2, description: "Socks", quantity: 12, packed: true },
-];
-
 function App() {
+  const [items, setItems] = useState<IItem[]>([]);
+
+  function handleAddItem(item: IItem) {
+    setItems((prevItems: IItem[]) => [...prevItems, item]);
+  }
+
+  function onDeleteItem(id: number) {
+    setItems(items.filter((item) => item.id !== id));
+  }
+
+  function onToggleItem(id: number) {
+    setItems(items.map((item) => (item.id === id ? { ...item, packed: !item.packed } : item)));
+  }
+
   return (
     <main>
       <section id="app">
         <Logo />
-        <Form />
-        <PackagingList />
+        <Form onAddItem={handleAddItem} />
+        <PackagingList items={items} onDeleteItem={onDeleteItem} onToggleItem={onToggleItem} />
         <States />
       </section>
     </main>
@@ -32,12 +44,15 @@ function Logo() {
   );
 }
 
-function Form() {
+function Form({ onAddItem }: { onAddItem: (val: IItem) => void }) {
   const [quantity, setQuantity] = useState(1);
   const [description, setDescription] = useState("");
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+
+    if (!description) return;
+
     const newItem = {
       id: Date.now(),
       quantity,
@@ -45,7 +60,10 @@ function Form() {
       packed: false,
     };
 
-    console.log(newItem);
+    onAddItem(newItem);
+
+    setDescription("");
+    setQuantity(1);
   }
 
   return (
@@ -53,9 +71,7 @@ function Form() {
       <h3>What do you need for your 😍 trip?</h3>
       <select value={quantity} onChange={(e) => setQuantity(+e.target.value)}>
         {Array.from({ length: 20 }, (_, i) => i + 1).map((num) => (
-          <option value={num} key={num}>
-            {num}
-          </option>
+          <option key={num}>{num}</option>
         ))}
       </select>
       <input type="text" placeholder="Item..." onChange={(e) => setDescription(e.target.value)} />
@@ -63,24 +79,44 @@ function Form() {
     </form>
   );
 }
-function PackagingList() {
+function PackagingList({
+  items,
+  onDeleteItem,
+  onToggleItem,
+}: {
+  items: IItem[];
+  onDeleteItem: (val: number) => void;
+  onToggleItem: (val: number) => void;
+}) {
   return (
     <ul className="list">
-      {initialItems.map((item) => {
-        return <Item key={item.id} quantity={item.quantity} description={item.description} packed={item.packed} />;
-      })}
+      {items.map((item: IItem) => (
+        <Item
+          id={item.id}
+          key={item.id}
+          description={item.description}
+          packed={item.packed}
+          quantity={item.quantity}
+          onDeleteItem={onDeleteItem}
+          onToggleItem={onToggleItem}
+        />
+      ))}
     </ul>
   );
 }
 
-function Item({ quantity, description, packed }: IItem) {
+function Item({ id, description, packed, quantity, onDeleteItem, onToggleItem }: IItem) {
+  // if (id === undefined) return;
+
   return (
     <li className="list-item">
-      <input type="checkbox" />
+      <input type="checkbox" onClick={() => onToggleItem && onToggleItem(id)} />
       <span className={`text ${packed && "selected"}`}>
         {quantity} {description}
       </span>
-      <button className="close">❌</button>
+      <span className="close" onClick={() => onDeleteItem && onDeleteItem(id)}>
+        ❌
+      </span>
     </li>
   );
 }

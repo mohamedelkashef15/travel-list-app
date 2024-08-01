@@ -14,8 +14,15 @@ App
     - add new item to packageList 
     - check if there is no description then return nothing 
     - set states to it's initial state
+    - Add data to packageList
+  
+  onClick ❌
+    - remove item from list array
+
+  Add checkbox and ontoggle add selected on item to cross 
 
 font 
 @import url("https://fonts.googleapis.com/css2?family=Monoton&family=Quicksand:wght@500;700&display=swap");
 
 font-family: "Quicksand", sans-serif;
+
