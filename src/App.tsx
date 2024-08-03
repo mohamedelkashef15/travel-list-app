@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface IItem {
   id: number;
@@ -10,7 +10,14 @@ interface IItem {
 }
 
 function App() {
-  const [items, setItems] = useState<IItem[]>([]);
+  const [items, setItems] = useState<IItem[]>(() => {
+    const savedItems = localStorage.getItem("items");
+    return savedItems ? JSON.parse(savedItems) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem("items", JSON.stringify(items));
+  }, [items]);
 
   function handleAddItem(item: IItem) {
     setItems((prevItems: IItem[]) => [...prevItems, item]);
