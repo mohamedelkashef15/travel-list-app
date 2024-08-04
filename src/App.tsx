@@ -94,15 +94,12 @@ function Form({ onAddItem }: { onAddItem: (val: IItem) => void }) {
 function PackingList({ items, onDeleteItem, onToggleItem }: IPackingList) {
   const [sortBy, setSortBy] = useState("input");
 
-  let sortedItems;
+  let sortedItems: IItem[] = [];
   if (sortBy === "input") sortedItems = items;
 
   if (sortBy === "description") sortedItems = items.slice().sort((a, b) => a.description.localeCompare(b.description));
 
   if (sortBy === "packed") sortedItems = items.slice().sort((a, b) => Number(a.packed) - Number(b.packed));
-
-  // a is item inside items
-  console.log(items.slice().sort((a, b) => a.description.localeCompare(b.description)));
 
   return (
     <div className="packing-list">
