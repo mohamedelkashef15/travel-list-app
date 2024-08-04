@@ -9,6 +9,12 @@ interface IItem {
   onToggleItem?: (val: number) => void;
 }
 
+interface IPackingList {
+  items: IItem[];
+  onDeleteItem: (val: number) => void;
+  onToggleItem: (val: number) => void;
+}
+
 function App() {
   const [items, setItems] = useState<IItem[]>(() => {
     const savedItems = localStorage.getItem("items");
@@ -36,8 +42,8 @@ function App() {
       <section id="app">
         <Logo />
         <Form onAddItem={handleAddItem} />
-        <PackagingList items={items} onDeleteItem={onDeleteItem} onToggleItem={onToggleItem} />
-        <States />
+        <PackingList items={items} onDeleteItem={onDeleteItem} onToggleItem={onToggleItem} />
+        <States items={items} />
       </section>
     </main>
   );
@@ -67,10 +73,9 @@ function Form({ onAddItem }: { onAddItem: (val: IItem) => void }) {
       packed: false,
     };
 
-    onAddItem(newItem);
-
     setDescription("");
     setQuantity(1);
+    onAddItem(newItem);
   }
 
   return (
@@ -81,34 +86,47 @@ function Form({ onAddItem }: { onAddItem: (val: IItem) => void }) {
           <option key={num}>{num}</option>
         ))}
       </select>
-      <input type="text" placeholder="Item..." onChange={(e) => setDescription(e.target.value)} />
+      <input type="text" placeholder="Item..." value={description} onChange={(e) => setDescription(e.target.value)} />
       <button type="submit">ADD</button>
     </form>
   );
 }
-function PackagingList({
-  items,
-  onDeleteItem,
-  onToggleItem,
-}: {
-  items: IItem[];
-  onDeleteItem: (val: number) => void;
-  onToggleItem: (val: number) => void;
-}) {
+function PackingList({ items, onDeleteItem, onToggleItem }: IPackingList) {
+  const [sortBy, setSortBy] = useState("input");
+
+  let sortedItems;
+  if (sortBy === "input") sortedItems = items;
+
+  if (sortBy === "description") sortedItems = items.slice().sort((a, b) => a.description.localeCompare(b.description));
+
+  if (sortBy === "packed") sortedItems = items.slice().sort((a, b) => Number(a.packed) - Number(b.packed));
+
+  // a is item inside items
+  console.log(items.slice().sort((a, b) => a.description.localeCompare(b.description)));
+
   return (
-    <ul className="list">
-      {items.map((item: IItem) => (
-        <Item
-          id={item.id}
-          key={item.id}
-          description={item.description}
-          packed={item.packed}
-          quantity={item.quantity}
-          onDeleteItem={onDeleteItem}
-          onToggleItem={onToggleItem}
-        />
-      ))}
-    </ul>
+    <div className="packing-list">
+      <ul className="list">
+        {sortedItems.map((item: IItem) => (
+          <Item
+            id={item.id}
+            key={item.id}
+            description={item.description}
+            packed={item.packed}
+            quantity={item.quantity}
+            onDeleteItem={onDeleteItem}
+            onToggleItem={onToggleItem}
+          />
+        ))}
+      </ul>
+      <div className="sort">
+        <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+          <option value="input">sort by input order</option>
+          <option value="description">sort by description</option>
+          <option value="packed">sort by packed status</option>
+        </select>
+      </div>
+    </div>
   );
 }
 
@@ -116,9 +134,9 @@ function Item({ id, description, packed, quantity, onDeleteItem, onToggleItem }:
   // if (id === undefined) return;
 
   return (
-    <li className="list-item">
+    <li className={`list-item ${packed && "selected"}`}>
       <input type="checkbox" onClick={() => onToggleItem && onToggleItem(id)} />
-      <span className={`text ${packed && "selected"}`}>
+      <span className="text">
         {quantity} {description}
       </span>
       <span className="close" onClick={() => onDeleteItem && onDeleteItem(id)}>
@@ -128,10 +146,28 @@ function Item({ id, description, packed, quantity, onDeleteItem, onToggleItem }:
   );
 }
 
-function States() {
+function States({ items }: { items: IItem[] }) {
+  const numOfItems = items.length;
+  const packedItems = items.filter((item) => item.packed === true).length;
+  const percentage = Math.round((packedItems / numOfItems) * 100);
+
+  if (percentage === 100) {
+    return (
+      <footer className="footer">
+        <em>You got everything! Ready to go ✈️</em>
+      </footer>
+    );
+  }
+
   return (
-    <footer>
-      <em>💼 You have 1 items on your list, and you already packed 0 (0%)</em>
+    <footer className="footer">
+      <em>
+        {numOfItems ? (
+          ` 💼 You have ${numOfItems} items on your list, and you already packed ${packedItems} (${percentage}%)`
+        ) : (
+          <span className="footer">Start adding some items to your packing list 🚀</span>
+        )}
+      </em>
     </footer>
   );
 }
