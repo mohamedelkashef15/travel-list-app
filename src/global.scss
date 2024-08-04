@@ -69,7 +69,8 @@ ul {
     background-color: #5a3e2b;
     padding: 5rem 8rem;
     font-size: 20px;
-    position: relative;
+    display: grid;
+    grid-template-rows: 4fr 1fr;
     .list {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
@@ -100,28 +101,34 @@ ul {
         }
       }
     }
-
-    .sort {
-      margin: auto;
-      width: 100%;
+    .buttons {
       display: flex;
       justify-content: center;
       align-items: center;
-      position: absolute;
-      bottom: 50px;
-      left: 0;
-
-      select {
+      gap: 20px;
+      .sort {
+        display: flex;
+        justify-content: center;
+        align-items: end;
+        select {
+          background-color: #ffebb3;
+          padding: 10px 20px;
+          border-radius: 25px;
+          font-size: 16px;
+          cursor: pointer;
+          word-spacing: 3px;
+          text-transform: uppercase;
+          &:focus {
+            outline: none;
+          }
+        }
+      }
+      .btn-clear {
         background-color: #ffebb3;
         padding: 10px 20px;
         border-radius: 25px;
         font-size: 16px;
         cursor: pointer;
-        word-spacing: 3px;
-        text-transform: uppercase;
-        &:focus {
-          outline: none;
-        }
       }
     }
   }

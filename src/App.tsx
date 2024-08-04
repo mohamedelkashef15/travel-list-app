@@ -13,6 +13,7 @@ interface IPackingList {
   items: IItem[];
   onDeleteItem: (val: number) => void;
   onToggleItem: (val: number) => void;
+  onClear: () => void;
 }
 
 function App() {
@@ -20,6 +21,10 @@ function App() {
     const savedItems = localStorage.getItem("items");
     return savedItems ? JSON.parse(savedItems) : [];
   });
+
+  function handleDeleteItems() {
+    setItems([]);
+  }
 
   useEffect(() => {
     localStorage.setItem("items", JSON.stringify(items));
@@ -42,7 +47,12 @@ function App() {
       <section id="app">
         <Logo />
         <Form onAddItem={handleAddItem} />
-        <PackingList items={items} onDeleteItem={onDeleteItem} onToggleItem={onToggleItem} />
+        <PackingList
+          items={items}
+          onDeleteItem={onDeleteItem}
+          onToggleItem={onToggleItem}
+          onClear={handleDeleteItems}
+        />
         <States items={items} />
       </section>
     </main>
@@ -91,7 +101,7 @@ function Form({ onAddItem }: { onAddItem: (val: IItem) => void }) {
     </form>
   );
 }
-function PackingList({ items, onDeleteItem, onToggleItem }: IPackingList) {
+function PackingList({ items, onDeleteItem, onToggleItem, onClear }: IPackingList) {
   const [sortBy, setSortBy] = useState("input");
 
   let sortedItems: IItem[] = [];
@@ -116,12 +126,17 @@ function PackingList({ items, onDeleteItem, onToggleItem }: IPackingList) {
           />
         ))}
       </ul>
-      <div className="sort">
-        <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
-          <option value="input">sort by input order</option>
-          <option value="description">sort by description</option>
-          <option value="packed">sort by packed status</option>
-        </select>
+      <div className="buttons">
+        <div className="sort">
+          <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+            <option value="input">sort by input order</option>
+            <option value="description">sort by description</option>
+            <option value="packed">sort by packed status</option>
+          </select>
+        </div>
+        <button className="btn-clear" onClick={onClear}>
+          Clear List
+        </button>
       </div>
     </div>
   );
